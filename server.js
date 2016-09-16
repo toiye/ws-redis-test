@@ -1,6 +1,7 @@
 'use strict';
 
 //let Util = require('util');  // Required only to log the data from the WebSocket connection
+let URL = require('url');
 let redis = require('redis');
 let WebSocketServer = require('ws').Server;
 
@@ -48,6 +49,7 @@ wss.on('connection', (ws) => {
 	let client_id = path.match(/ws\/v1\/(\w*)/)[1];
 	console.log("New connection from: " + client_id);
 	clients[client_id] = ws;
+	console.log(`Current list of connections: ${Object.keys(clients)}`);
 
 	ws.on('message', (data) => {
 
