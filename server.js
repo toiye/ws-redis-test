@@ -90,7 +90,6 @@ wss.on('connection', (ws) => {
 	console.log("New connection from: " + clientId)
 	clients[clientId] = ws
 	console.log(`Current list of connections: ${Object.keys(clients)}`)
-	pub.publish('myChannel', JSON.stringify({command: 'refresh_active_clients'}))
 
 	ws.on('message', (data) => {
 
@@ -124,10 +123,9 @@ wss.on('connection', (ws) => {
 		}
 		// Return the most recently cached list of servers and clients
 		else if (message.command === 'get_active_clients') {
-			console.log(allConnectedClients)
 			ws.send(JSON.stringify(allConnectedClients))
 		}
-		else {
+		else if (message.command === 'send_message') {
 			pub.publish("myChannel", data)
 		}
 	})
@@ -139,7 +137,7 @@ wss.on('connection', (ws) => {
 })
 
 sub.subscribe("myChannel")
-
+pub.publish('myChannel', JSON.stringify({command: 'refresh_active_clients'}))
 
 // Some cleanup that I'm not doing at all.  Unclear of the implications over time.
 /*
